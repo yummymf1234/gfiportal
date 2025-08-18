@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -54,4 +55,22 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+});
+
+// OTP Email Verification Routes (can be accessed by guest users)
+Route::middleware('guest')->group(function () {
+    Route::get('verify-email-code', [EmailVerificationController::class, 'show'])
+        ->name('verification.code.show');
+        
+    Route::post('verify-email-code', [EmailVerificationController::class, 'verify'])
+        ->name('verification.verify')
+        ->middleware('throttle:6,1');
+        
+    Route::post('verify-email-code/send', [EmailVerificationController::class, 'send'])
+        ->name('verification.send')
+        ->middleware('throttle:3,1');
+        
+    Route::post('verify-email-code/resend', [EmailVerificationController::class, 'resend'])
+        ->name('verification.resend')
+        ->middleware('throttle:3,1');
 });
