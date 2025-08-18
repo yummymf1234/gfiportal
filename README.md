@@ -61,6 +61,8 @@ cd my-app2
 
 # One command to set up everything (includes .env, key generation, migrations)
 composer setup
+
+# Note: Setup only starts the Laravel container (not PostgreSQL) since you're using Neon database
 ```
 
 #### Manual Setup
@@ -467,6 +469,14 @@ DB_SSLMODE=require
 # 2. Go to Settings → Resources → WSL Integration
 # 3. Enable integration with your Ubuntu distribution
 # 4. Restart Docker Desktop
+```
+
+**Port already in use:**
+```bash
+# Error: "port is already allocated"
+# Solution: Stop other services using the same ports
+docker-compose down -v
+# Or change ports in docker-compose.yml
 ```
 
 **Sail script line ending errors:**
