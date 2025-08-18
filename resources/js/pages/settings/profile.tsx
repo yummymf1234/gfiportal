@@ -27,7 +27,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
             <SettingsLayout>
                 <div className="space-y-6">
-                    <HeadingSmall title="Profile information" description="Update your name and email address" />
+                    <HeadingSmall title="Profile information" description="Update your personal and professional details" />
 
                     <Form
                         method="patch"
@@ -39,25 +39,38 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                     >
                         {({ processing, recentlySuccessful, errors }) => (
                             <>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="name">Name</Label>
-
-                                    <Input
-                                        id="name"
-                                        className="mt-1 block w-full"
-                                        defaultValue={auth.user.name}
-                                        name="name"
-                                        required
-                                        autoComplete="name"
-                                        placeholder="Full name"
-                                    />
-
-                                    <InputError className="mt-2" message={errors.name} />
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="first_name">First name</Label>
+                                        <Input
+                                            id="first_name"
+                                            className="mt-1 block w-full"
+                                            defaultValue={auth.user.first_name}
+                                            name="first_name"
+                                            required
+                                            autoComplete="given-name"
+                                            placeholder="First name"
+                                        />
+                                        <InputError className="mt-2" message={errors.first_name} />
+                                    </div>
+                                    
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="last_name">Last name</Label>
+                                        <Input
+                                            id="last_name"
+                                            className="mt-1 block w-full"
+                                            defaultValue={auth.user.last_name}
+                                            name="last_name"
+                                            required
+                                            autoComplete="family-name"
+                                            placeholder="Last name"
+                                        />
+                                        <InputError className="mt-2" message={errors.last_name} />
+                                    </div>
                                 </div>
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="email">Email address</Label>
-
                                     <Input
                                         id="email"
                                         type="email"
@@ -68,8 +81,62 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                         autoComplete="username"
                                         placeholder="Email address"
                                     />
-
                                     <InputError className="mt-2" message={errors.email} />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="phone">Phone number</Label>
+                                    <Input
+                                        id="phone"
+                                        type="tel"
+                                        className="mt-1 block w-full"
+                                        defaultValue={auth.user.phone}
+                                        name="phone"
+                                        autoComplete="tel"
+                                        placeholder="+65 9123 4567"
+                                    />
+                                    <InputError className="mt-2" message={errors.phone} />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="country">Country</Label>
+                                        <Input
+                                            id="country"
+                                            className="mt-1 block w-full"
+                                            defaultValue={auth.user.country}
+                                            name="country"
+                                            autoComplete="country"
+                                            placeholder="Singapore"
+                                        />
+                                        <InputError className="mt-2" message={errors.country} />
+                                    </div>
+                                    
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="company">Company</Label>
+                                        <Input
+                                            id="company"
+                                            className="mt-1 block w-full"
+                                            defaultValue={auth.user.company}
+                                            name="company"
+                                            autoComplete="organization"
+                                            placeholder="Company name"
+                                        />
+                                        <InputError className="mt-2" message={errors.company} />
+                                    </div>
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="job_title">Job title</Label>
+                                    <Input
+                                        id="job_title"
+                                        className="mt-1 block w-full"
+                                        defaultValue={auth.user.job_title}
+                                        name="job_title"
+                                        autoComplete="organization-title"
+                                        placeholder="Software Engineer"
+                                    />
+                                    <InputError className="mt-2" message={errors.job_title} />
                                 </div>
 
                                 {mustVerifyEmail && auth.user.email_verified_at === null && (
