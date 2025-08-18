@@ -54,6 +54,8 @@ class RegisteredUserController extends Controller
             'company' => $request->company,
             'job_title' => $request->job_title,
             'password' => Hash::make($request->password),
+            'role' => 'member', // Default role for new registrations
+            'is_active' => true, // Default active status
             // Don't verify email immediately - let OTP handle it
         ]);
 
