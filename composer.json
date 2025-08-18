@@ -80,18 +80,18 @@
         ],
         "setup": [
             "composer install",
-            "cp .env.example .env",
             "composer require laravel/sail --dev",
             "echo 'pgsql' | php artisan sail:install",
-            "dos2unix ./vendor/bin/sail",
-            "chmod +x ./vendor/bin/sail",
-            "cat > ./vendor/bin/sail << 'EOF'\n#!/bin/bash\n\n# Laravel Sail - Simple wrapper for Docker Compose and Laravel commands\n\n# Check if the first argument is a Docker Compose command\ncase \"$1\" in\n    up|down|build|ps|logs|exec|run|stop|start|restart|pull|push|config|create|kill|pause|unpause|port|top|stats|scale|rm|wait|watch|ls|version|volumes|events|attach|commit|cp|export|images|port|publish)\n        # These are Docker Compose commands\n        docker-compose \"$@\"\n        ;;\n    artisan)\n        # Handle artisan commands\n        docker-compose exec laravel.test php artisan \"${@:2}\"\n        ;;\n    *)\n        # Everything else goes to the Laravel container\n        docker-compose exec laravel.test \"$@\"\n        ;;\nesac\nEOF",
-            "chmod +x ./vendor/bin/sail",
-            "./vendor/bin/sail up -d",
-            "./vendor/bin/sail npm install",
-            "./vendor/bin/sail artisan key:generate",
-            "./vendor/bin/sail artisan migrate",
-            "./vendor/bin/sail npm run dev"
+            "docker-compose up -d",
+            "docker-compose exec laravel.test cp .env.example .env",
+            "docker-compose exec laravel.test chmod +x ./vendor/bin/sail",
+            "docker-compose exec laravel.test sed -i 's/\\r//g' ./vendor/bin/sail",
+            "docker-compose exec laravel.test bash -c 'cat > ./vendor/bin/sail << \"EOF\"\n#!/bin/bash\n\n# Laravel Sail - Simple wrapper for Docker Compose and Laravel commands\n\n# Check if the first argument is a Docker Compose command\ncase \"$1\" in\n    up|down|build|ps|logs|exec|run|stop|start|restart|pull|push|config|create|kill|pause|unpause|port|top|stats|scale|rm|wait|watch|ls|version|volumes|events|attach|commit|cp|export|images|port|publish)\n        # These are Docker Compose commands\n        docker-compose \"$@\"\n        ;;\n    artisan)\n        # Handle artisan commands\n        docker-compose exec laravel.test php artisan \"${@:2}\"\n        ;;\n    *)\n        # Everything else goes to the Laravel container\n        docker-compose exec laravel.test \"$@\"\n        ;;\nesac\nEOF'",
+            "docker-compose exec laravel.test chmod +x ./vendor/bin/sail",
+            "docker-compose exec laravel.test npm install",
+            "docker-compose exec laravel.test php artisan key:generate",
+            "docker-compose exec laravel.test php artisan migrate",
+            "docker-compose exec laravel.test npm run dev"
         ],
         "fresh": [
             "./vendor/bin/sail down -v",
