@@ -459,6 +459,16 @@ DB_SSLMODE=require
 
 ### Common Issues
 
+**Docker Desktop WSL Integration not enabled:**
+```bash
+# Error: "docker-compose command not found"
+# Solution: Enable WSL integration in Docker Desktop
+# 1. Open Docker Desktop
+# 2. Go to Settings → Resources → WSL Integration
+# 3. Enable integration with your Ubuntu distribution
+# 4. Restart Docker Desktop
+```
+
 **Sail script line ending errors:**
 ```bash
 dos2unix ./vendor/bin/sail
