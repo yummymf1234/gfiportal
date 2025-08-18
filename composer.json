@@ -85,7 +85,7 @@
             "@php -r \"if (!file_exists('.env')) { fwrite(STDERR, 'Missing .env. Please copy .env.example to .env and configure DB vars.\\n'); exit(1);} echo 'Using existing .env'.PHP_EOL;\"",
             "dos2unix ./vendor/bin/sail || sed -i 's/\\r//g' ./vendor/bin/sail",
             "chmod +x ./vendor/bin/sail",
-            "WWWUSER=$(id -u) WWWGROUP=$(id -g) ./vendor/bin/sail build --no-cache",
+            "WWWUSER=$(id -u) WWWGROUP=$(id -g) ./vendor/bin/sail build",
             "WWWUSER=$(id -u) WWWGROUP=$(id -g) ./vendor/bin/sail up -d",
             "./vendor/bin/sail npm install",
             "./vendor/bin/sail artisan key:generate",
