@@ -68,14 +68,18 @@
             "@php artisan test"
         ],
         "start": [
+            "docker stop $(docker ps -q) 2>/dev/null || true",
+            "docker rm $(docker ps -aq) 2>/dev/null || true",
             "./vendor/bin/sail up -d",
             "./vendor/bin/sail npm run dev"
         ],
         "stop": [
-            "./vendor/bin/sail down"
+            "docker stop $(docker ps -q) 2>/dev/null || true",
+            "docker rm $(docker ps -aq) 2>/dev/null || true"
         ],
         "restart": [
-            "./vendor/bin/sail down",
+            "docker stop $(docker ps -q) 2>/dev/null || true",
+            "docker rm $(docker ps -aq) 2>/dev/null || true",
             "./vendor/bin/sail up -d",
             "./vendor/bin/sail npm run dev"
         ],

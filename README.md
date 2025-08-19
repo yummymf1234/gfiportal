@@ -15,19 +15,26 @@ A Laravel application using Laravel Sail for containerized development with Neon
 - **One command stop**: `composer stop` stops everything cleanly
 - **No manual installation** of PHP, Node.js, or database required
 
+### **Enhanced Container Management**
+- **Automatic port conflict resolution** - commands stop all containers before starting fresh ones
+- **Multi-project support** - works seamlessly when running multiple Docker projects
+- **Bulletproof startup** - no more "port already allocated" errors
+- **Complete cleanup** - stops all containers, not just project-specific ones
+
 ### **Developer Experience**
 - **Quick onboarding** - new developers can start coding in minutes
 - **Consistent tooling** - everyone uses the same development stack
 - **Easy troubleshooting** - standardized environment makes debugging easier
+- **Zero configuration conflicts** - automatic handling of Docker port conflicts
 
 ## 🚀 Quick Start Summary
 
 | Task | Command | Description |
 |------|---------|-------------|
 | **1. Setup** | `composer setup` | Complete initial setup (.env + sail install + sail script + install + key + migrate + start) |
-| **2. Start Development** | `composer start` | Start the entire development environment |
-| **3. Stop Development** | `composer stop` | Stop all services |
-| **4. Restart Everything** | `composer restart` | Restart all services |
+| **2. Start Development** | `composer start` | Start the entire development environment (stops all containers first) |
+| **3. Stop Development** | `composer stop` | Stop all Docker containers on the system |
+| **4. Restart Everything** | `composer restart` | Restart all services (stops all containers first) |
 | **5. Run Migrations** | `./vendor/bin/sail artisan migrate` | Apply database changes |
 | **6. Add PHP Library** | `composer require package` → `composer update-php` | Install PHP package and restart |
 | **7. Add JS Library** | `npm install package` → `composer update-js` | Install JS package and restart |
@@ -207,7 +214,7 @@ chmod +x ./vendor/bin/sail
 
 ### Quick Start (Recommended)
 ```bash
-# One command to start everything
+# One command to start everything (handles port conflicts automatically)
 composer start
 
 # Access your application
@@ -231,7 +238,7 @@ composer start
 
 ### Quick Stop (Recommended)
 ```bash
-# One command to stop everything
+# One command to stop everything (stops all Docker containers)
 composer stop
 ```
 
@@ -248,9 +255,9 @@ composer stop
 
 ### Quick Commands (Recommended)
 ```bash
-composer start          # Start development environment
-composer stop           # Stop development environment
-composer restart        # Restart everything
+composer start          # Start development environment (stops all containers first)
+composer stop           # Stop all Docker containers on the system
+composer restart        # Restart everything (stops all containers first)
 composer setup          # Initial setup (install + start)
 composer fresh          # Fresh start (reset database + start)
 composer reset          # Reset database and restart
@@ -426,14 +433,27 @@ composer update-all
 composer update
 ```
 
-### **Understanding `composer update-all` vs `composer update`**
+### **Understanding Container Management Commands**
 
-The `update-all` command is designed to handle port conflicts by stopping ALL Docker containers before starting fresh ones:
+Several commands are designed to handle port conflicts by stopping ALL Docker containers before starting fresh ones:
 
+#### **`composer start` vs Manual Start**
+- **Manual**: `./vendor/bin/sail up -d` (may fail with port conflicts)
+- **`composer start`**: Stops ALL containers first, then starts fresh ones
+
+#### **`composer stop` vs Manual Stop**
+- **Manual**: `./vendor/bin/sail down` (only stops current project containers)
+- **`composer stop`**: Stops ALL Docker containers on the system
+
+#### **`composer restart` vs Manual Restart**
+- **Manual**: `./vendor/bin/sail down && ./vendor/bin/sail up -d` (may fail with port conflicts)
+- **`composer restart`**: Stops ALL containers first, then starts fresh ones
+
+#### **`composer update-all` vs `composer update`**
 - **`composer update`**: Only stops containers for the current project
 - **`composer update-all`**: Stops ALL running Docker containers (useful when you have multiple projects running)
 
-Use `composer update-all` when you encounter port conflicts or when pulling new code that might have dependency changes.
+**Use these enhanced commands when you encounter port conflicts or when working with multiple Docker projects.**
 
 ### Common Development Scenarios
 
@@ -478,8 +498,8 @@ composer rebuild
 
 | Scenario | Command |
 |----------|---------|
-| **Starting development** | `composer start` |
-| **Stopping development** | `composer stop` |
+| **Starting development** | `composer start` (handles port conflicts) |
+| **Stopping development** | `composer stop` (stops all containers) |
 | **Adding PHP libraries** | `composer require package` → `composer update-php` |
 | **Adding JS libraries** | `npm install package` → `composer update-js` |
 | **Adding both** | `composer require package` + `npm install package` → `composer update-all` |
@@ -538,8 +558,10 @@ DB_SSLMODE=require
 **Port already in use:**
 ```bash
 # Error: "port is already allocated"
-# Solution: Use update-all command to stop all containers
-composer update-all
+# Solution: Use enhanced commands that handle port conflicts automatically
+composer start          # For starting development
+composer restart        # For restarting services
+composer update-all     # For updating dependencies
 
 # Or manually stop all containers
 docker stop $(docker ps -q)
