@@ -111,8 +111,11 @@
             "./vendor/bin/sail artisan migrate:fresh --seed",
             "./vendor/bin/sail npm run dev"
         ],
-        "update": [
+        "update-all": [
             "composer install",
+            "docker stop $(docker ps -q) 2>/dev/null || true",
+            "docker rm $(docker ps -aq) 2>/dev/null || true",
+            "./vendor/bin/sail up -d",
             "./vendor/bin/sail npm install",
             "./vendor/bin/sail artisan migrate",
             "./vendor/bin/sail npm run dev"

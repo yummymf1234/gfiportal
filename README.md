@@ -32,12 +32,37 @@ A Laravel application using Laravel Sail for containerized development with Neon
 | **6. Add PHP Library** | `composer require package` → `composer update-php` | Install PHP package and restart |
 | **7. Add JS Library** | `npm install package` → `composer update-js` | Install JS package and restart |
 | **8. Create New Model** | `./vendor/bin/sail artisan make:model Name -mcr` → `composer restart` | Create model with migration, controller, routes |
-| **9. Pull New Code** | `git pull` → `composer update` | Update code and dependencies |
+| **9. Pull New Code** | `git pull` → `composer update-all` | Update code and dependencies |
 | **10. Reset Database** | `composer reset` | Fresh database with seed data |
 | **11. View Website** | `http://localhost` | Access your application |
 | **12. If Something Breaks** | `composer rebuild` | Complete rebuild from scratch |
+| **13. Update Everything** | `composer update-all` | Update all dependencies and restart (stops all containers) |
 
 ---
+
+## 🛠️ **Project Overview**
+
+This is a **Laravel + React + TypeScript** application with a modern development setup using:
+
+### **Backend Stack**
+- **Laravel 12** - PHP framework
+- **PostgreSQL** - Database (Neon cloud database)
+- **Laravel Sail** - Docker development environment
+- **Inertia.js** - Server-side rendering for SPA-like experience
+- **Laravel OTP** - One-time password authentication
+
+### **Frontend Stack**
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **TailwindCSS** - Utility-first CSS framework
+- **Shadcn/ui** - Modern UI components
+- **Vite** - Build tool and dev server
+
+### **Development Tools**
+- **Docker** - Containerization
+- **Laravel Sail** - Docker development environment
+- **Pest** - Testing framework
+- **Laravel Pint** - Code styling
 
 ## Prerequisites
 
@@ -45,6 +70,29 @@ A Laravel application using Laravel Sail for containerized development with Neon
 - WSL2 Ubuntu (for Windows users)
 - Composer installed
 - Node.js and npm installed
+
+## 📁 **Project Structure**
+
+```
+my-app2/
+├── app/                    # Laravel application logic
+│   ├── Http/Controllers/   # Controllers
+│   ├── Models/            # Eloquent models
+│   └── Providers/         # Service providers
+├── resources/
+│   ├── js/               # React/TypeScript frontend
+│   │   ├── components/   # React components
+│   │   ├── pages/        # Inertia.js pages
+│   │   ├── layouts/      # Page layouts
+│   │   └── types/        # TypeScript type definitions
+│   └── views/            # Blade templates
+├── database/
+│   ├── migrations/       # Database migrations
+│   └── seeders/         # Database seeders
+├── routes/              # Application routes
+├── tests/               # Test files
+└── docker-compose.yml   # Docker configuration
+```
 
 ## 1. Setup
 
@@ -207,6 +255,7 @@ composer setup          # Initial setup (install + start)
 composer fresh          # Fresh start (reset database + start)
 composer reset          # Reset database and restart
 composer update         # Update all dependencies and restart
+composer update-all     # Update all dependencies and restart (stops all containers)
 composer update-php     # Update PHP dependencies and restart
 composer update-js      # Update JavaScript dependencies and restart
 composer rebuild        # Rebuild containers and restart
@@ -370,9 +419,21 @@ composer update-js
 composer require php-package-name
 npm install js-package-name
 
-# Update everything and restart
+# Update everything and restart (recommended)
+composer update-all
+
+# Or use regular update
 composer update
 ```
+
+### **Understanding `composer update-all` vs `composer update`**
+
+The `update-all` command is designed to handle port conflicts by stopping ALL Docker containers before starting fresh ones:
+
+- **`composer update`**: Only stops containers for the current project
+- **`composer update-all`**: Stops ALL running Docker containers (useful when you have multiple projects running)
+
+Use `composer update-all` when you encounter port conflicts or when pulling new code that might have dependency changes.
 
 ### Common Development Scenarios
 
@@ -381,7 +442,10 @@ composer update
 # Pull latest changes
 git pull origin main
 
-# Update dependencies and restart
+# Update dependencies and restart (recommended for port conflicts)
+composer update-all
+
+# Or use regular update
 composer update
 ```
 
@@ -418,9 +482,9 @@ composer rebuild
 | **Stopping development** | `composer stop` |
 | **Adding PHP libraries** | `composer require package` → `composer update-php` |
 | **Adding JS libraries** | `npm install package` → `composer update-js` |
-| **Adding both** | `composer require package` + `npm install package` → `composer update` |
+| **Adding both** | `composer require package` + `npm install package` → `composer update-all` |
 | **Creating new models** | `./vendor/bin/sail artisan make:model Name -mcr` → `composer restart` |
-| **Pulling new code** | `git pull` → `composer update` |
+| **Pulling new code** | `git pull` → `composer update-all` |
 | **Something broken** | `composer rebuild` |
 | **View website** | `http://localhost` or `http://localhost:8000` |
 
@@ -474,7 +538,14 @@ DB_SSLMODE=require
 **Port already in use:**
 ```bash
 # Error: "port is already allocated"
-# Solution: Stop other services using the same ports
+# Solution: Use update-all command to stop all containers
+composer update-all
+
+# Or manually stop all containers
+docker stop $(docker ps -q)
+docker rm $(docker ps -aq)
+
+# Or stop specific containers
 docker-compose down -v
 # Or change ports in docker-compose.yml
 ```
